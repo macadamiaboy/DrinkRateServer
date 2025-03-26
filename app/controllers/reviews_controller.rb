@@ -1,5 +1,5 @@
 class ReviewsController < ApplicationController
-
+  protect_from_forgery with: :null_session
   before_action :set_review!, only: %i[show edit update destroy]
 
   def show
@@ -13,7 +13,7 @@ class ReviewsController < ApplicationController
   def create
     @review = Review.new review_params
     if @review.save
-      render json: "Successfully updated"
+      render json: "Successfully created", status: :created
     else
       render json: "Error, check your data and try again"
     end
