@@ -14,5 +14,6 @@ Rails.application.routes.draw do
 
   resources :reviews
   resources :users
+  post 'auth/login', to: 'auth#login'
 
 end

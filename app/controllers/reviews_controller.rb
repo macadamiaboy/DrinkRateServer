@@ -1,9 +1,13 @@
 class ReviewsController < ApplicationController
-  protect_from_forgery with: :null_session
   before_action :set_review!, only: %i[show edit update destroy]
 
+  #отредактировать на крепление фото
+  def index
+    render json: Review.all
+  end
+
   def show
-    render json: @review
+    render json: review_with_images(@review)
   end
 
   def new
@@ -32,17 +36,31 @@ class ReviewsController < ApplicationController
 
   def destroy
     @review.destroy
-    render json: "Your review is successfully deleted"
+    render json: "Your review is successfully deleted", status: :ok
   end
 
   private
-
+  #remove abv
   def review_params
     params.require(:review).permit(:name, :rating, :price, :description, :producer, :abv, :user_id)
   end
 
   def set_review!
     @review = Review.find params[:id]
+  end
+
+  def review_with_images(review)
+    {
+      id: review.id,
+      name: review.name,
+      rating: review.rating,
+      price: review.price,
+      description: review.description,
+      producer: review.producer,
+      abv: review.abv,
+      user_id: review.user_id,
+      images: review.images.map { |image| url_for(image) }
+    }
   end
 
 end
