@@ -16,6 +16,7 @@ class ReviewsController < ApplicationController
 
   def create
     @review = Review.new review_params
+    @review.user_id = $user.id
     if @review.save
       render json: "Successfully created", status: :created
     else
@@ -42,7 +43,7 @@ class ReviewsController < ApplicationController
   private
   #remove abv
   def review_params
-    params.require(:review).permit(:name, :rating, :price, :description, :producer, :abv, :user_id)
+    params.require(:review).permit(:name, :rating, :price, :description, :producer, :abv)
   end
 
   def set_review!
