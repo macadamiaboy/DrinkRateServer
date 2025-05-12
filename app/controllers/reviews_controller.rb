@@ -20,7 +20,7 @@ class ReviewsController < ApplicationController
     if @review.save
       render json: "Successfully created", status: :created
     else
-      render json: "Error, check your data and try again"
+      render json: "Error, check your data and try again", status: :unprocessable_entity
     end
   end
 
@@ -29,9 +29,9 @@ class ReviewsController < ApplicationController
 
   def update
     if @review.update review_params
-      render json: "Successfully updated"
+      render json: "Successfully updated", status: :ok
     else
-      render json: "Error, check your data and try again"
+      render json: "Error, check your data and try again", status: :unprocessable_entity
     end
   end
 

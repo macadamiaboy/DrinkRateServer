@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  skip_before_action :authorized, only: %i[create]
+
   before_action :set_user!, only: %i[show edit update destroy]
 
   def show
@@ -12,9 +14,10 @@ class UsersController < ApplicationController
   def create
     @user = User.new user_params
     if @user.save
-      render json: "Successfully created", status: :created
+      token = encode_token(login: @user.login)
+      render json: { token: token }, status: :created
     else
-      render json: "Error, check your data and try again"
+      render json: @user.errors.full_messages , status: :unprocessable_entity
     end
   end
 
@@ -23,15 +26,15 @@ class UsersController < ApplicationController
 
   def update
     if @user.update user_params
-      render json: "Successfully updated"
+      render json: "Successfully updated", status: :ok
     else
-      render json: "Error, check your data and try again"
+      render json: "Error, check your data and try again", status: :unprocessable_entity
     end
   end
 
   def destroy
     @user.destroy
-    render json: "Your review is successfully deleted"
+    render json: "User is successfully deleted", status: :ok
   end
 
   private
